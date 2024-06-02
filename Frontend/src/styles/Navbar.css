@@ -1,0 +1,60 @@
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.navbar {
+  background: white;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  width: auto;
+  max-width: 800px; /* Adjust based on your design needs */
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 16px; /* Adjust font size as needed */
+  padding: 8px 15px; /* Adjust padding for better spacing */
+  border-radius: 10px;
+  display: block;
+}
+
+.nav-item.active a {
+  background-color: #4caf50;
+  color: white;
+}
+
+.notification {
+  background-color: white;
+  color: #4caf50;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  position: relative; /* changed from absolute to relative */
+  top: 0; /* adjust as needed */
+  right: 0; /* adjust as needed */
+  margin-left: 5px; /* spacing between text and badge */
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+  }
+
+  .nav-item a {
+    text-align: center; /* Center links on smaller screens */
+  }
+}
