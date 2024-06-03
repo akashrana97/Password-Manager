@@ -18,15 +18,13 @@ import {
 } from "./actions";
 
 //Include Both Helper File with needed methods
-import { authFetch, liveLogin, postLogin } from "../../../helpers/api_helper";
 import Cookies from "js-cookie";
 import Axios from "../../../helpers/Axios";
-import { env_api } from "../../../config";
+// import { env_api } from "../../../config";
 
 export function* getLogUser() {
   try {
-    const response = yield call(
-      Axios.get,env_api.API_URL+"login/")
+    const response = yield call(Axios.get, "http://127.0.0.1:8000/api/login/");
     yield put(getLogUserSuccess(response.data));
   } catch (error) {
     yield put(getLogUserFail(error));
@@ -37,8 +35,12 @@ export function* loginUser({ payload: { user, history } }) {
   try {
     const response = yield call(
       Axios.post,
-      env_api.API_URL+"login/",
-      JSON.stringify({ username: user.username, password: user.password,recaptchaValue:user.token  }),
+      "http://127.0.0.1:8000/api/login/",
+      JSON.stringify({
+        username: user.username,
+        password: user.password,
+        recaptchaValue: user.token,
+      }),
       {
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +88,6 @@ function* logoutUser() {
     yield put(apiError(LOGOUT_USER, error));
   }
 }
-
 
 function* authSaga() {
   yield takeEvery(LOGIN_USER, loginUser);

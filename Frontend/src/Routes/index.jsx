@@ -1,8 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-//Layouts
-
 //routes
 import { authProtectedRoutes, publicRoutes } from "./allRoutes.jsx";
 import { AuthProtected } from "./AuthProtected.jsx";

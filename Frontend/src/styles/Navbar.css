@@ -1,60 +1,41 @@
-.navbar-container {
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-}
+/* src/components/Navbar.css */
 
 .navbar {
-  background: white;
-  padding: 10px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 25px;
-  width: auto;
-  max-width: 800px; /* Adjust based on your design needs */
-}
-
-.nav-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  background-color: #2f3c7e;
+  color: #fff;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
   width: 100%;
+  z-index: 1000;
 }
 
-.nav-item a {
+.navbar-brand h1 {
+  margin: 0;
+  font-size: 1.5em;
+  color: #fff;
+}
+
+.navbar-list {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-item {
+  margin-left: 20px;
+}
+
+.navbar-item a {
+  color: #fff;
   text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  font-size: 16px; /* Adjust font size as needed */
-  padding: 8px 15px; /* Adjust padding for better spacing */
-  border-radius: 10px;
-  display: block;
+  font-size: 1em;
 }
 
-.nav-item.active a {
-  background-color: #4caf50;
-  color: white;
-}
-
-.notification {
-  background-color: white;
-  color: #4caf50;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 12px;
-  position: relative; /* changed from absolute to relative */
-  top: 0; /* adjust as needed */
-  right: 0; /* adjust as needed */
-  margin-left: 5px; /* spacing between text and badge */
-}
-
-@media (max-width: 768px) {
-  .nav-links {
-    flex-direction: column;
-  }
-
-  .nav-item a {
-    text-align: center; /* Center links on smaller screens */
-  }
+.navbar-item a:hover {
+  text-decoration: underline;
 }

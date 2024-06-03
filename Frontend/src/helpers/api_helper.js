@@ -1,12 +1,14 @@
 import axios from "axios";
-import { env_api } from "../config";
+// import { env_api } from "../config.js";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-export const authFetch = axios.create({ baseURL: env_api.API_URL });
+export const authFetch = axios.create({
+  baseURL: "http://127.0.0.1:8000/api/",
+});
 
 export const postLogin = async (data) =>
-  authFetch.post(env_api.API_URL, JSON.stringify(data), {
+  authFetch.post("http://127.0.0.1:8000/api/", JSON.stringify(data), {
     headers: {
       "Content-Type": "multipart/form-data",
     },

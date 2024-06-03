@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import "../styles/Login.css";
 import ReCaptcha from "../Components/Common/reCaptchaV3";
 import { loginUser, getLogUser } from "../store/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = (props) => {
   const {
@@ -11,7 +12,8 @@ const Login = (props) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const navigate = useNavigate();
+  const history = useNavigate();
+  const dispatch = useDispatch();
 
   const onSubmit = (data) => {
     window.grecaptcha
@@ -21,8 +23,8 @@ const Login = (props) => {
       .then((token) => {
         data.token = token;
         console.log(props);
-        const history = useNavigate();
-        dispatch(loginUser(values, history));
+        console.log("------data->", data);
+        dispatch(loginUser(data, history));
       });
   };
 

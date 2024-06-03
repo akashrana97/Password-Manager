@@ -4,11 +4,11 @@ from django.db.models.signals import post_save
 # Create your models here.
 
 class User(AbstractUser):
-    username = models.CharField(max_length=100)
+    # username = models.CharField(max_length=100)
     email = models.EmailField(unique = True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    # USERNAME_FIELD = 'email'
+    # REQUIRED_FIELDS = ['username']
 
     def profile(self):
         profile = Profile.objects.get(user=self)

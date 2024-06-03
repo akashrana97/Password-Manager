@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { Navigate, Route } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useProfile } from "../Components/Hooks/UserHooks";
 
 const AuthProtected = (props) => {
-  let token = null;
+  const { userProfile, loading, token } = useProfile();
   const isAuthenticated = !!Cookies.get("authUser");
-
   if (!isAuthenticated) {
     return (
       <Navigate to={{ pathname: "/login", state: { from: props.location } }} />
