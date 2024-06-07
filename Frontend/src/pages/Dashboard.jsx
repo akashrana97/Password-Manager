@@ -10,7 +10,10 @@ import {
 import "../styles/PasswordList.css";
 import {
   AddPasswordList,
+  DeletePassword,
+  FetchSinglePassword,
   GetPasswordList,
+  UpdatePasswordList,
 } from "../store/PasswordList/passwordListReducer";
 import { useDispatch, useSelector } from "react-redux";
 import PasswordModal from "../Components/PasswordModal";
@@ -22,8 +25,10 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [contextMenu, setContextMenu] = useState(null);
+  const [currentRecord, setCurrentRecord] = useState(null);
   const PasswordListData = useSelector((state) => state.PasswordList.data);
   const dispatch = useDispatch();
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     dispatch(GetPasswordList());
@@ -43,8 +48,19 @@ const Dashboard = () => {
     setIsModalOpen(false);
   };
 
+  const handleEditPassword = (data) => {
+    dispatch(UpdatePasswordList({ id: data.id, data }));
+    setIsModalOpen(false);
+  };
+
   const handleSearch = (e) => {
     setSearchInput(e.target.value);
+  };
+
+  let fillPassword = (data) => {
+    setCurrentRecord(data);
+    setIsEditMode(true);
+    setIsModalOpen(true);
   };
 
   const filteredData = useMemo(() => {
@@ -55,12 +71,15 @@ const Dashboard = () => {
     );
   }, [PasswordListData, searchInput]);
 
-  const handleEdit = (index) => {
-    // Implement edit functionality here
-    console.log("Edit item at index", index);
+  const handleEdit = (data) => {
+    if (data && data.id)
+      dispatch(FetchSinglePassword({ id: data.id, fillPassword }));
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = (data) => {
+    console.log(data);
+    dispatch(DeletePassword(data.id));
+
     // Implement delete functionality here
     // setPasswords(passwords.filter((_, i) => i !== index));
   };
@@ -100,13 +119,13 @@ const Dashboard = () => {
           <div>
             <button
               className="action-button"
-              onClick={() => handleEdit(row.index)}
+              onClick={() => handleEdit(row.original)}
             >
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button
               className="action-button"
-              onClick={() => handleDelete(row.index)}
+              onClick={() => handleDelete(row.original)}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
@@ -139,6 +158,12 @@ const Dashboard = () => {
     gotoPage(selected);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsEditMode(false);
+    setCurrentRecord(null);
+  };
+
   return (
     <div className="password-manager">
       <header className="header">
@@ -165,8 +190,9 @@ const Dashboard = () => {
 
       <PasswordModal
         isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddPassword}
+        onRequestClose={handleCloseModal}
+        onSubmit={isEditMode ? handleEditPassword : handleAddPassword}
+        currentRecord={currentRecord}
       />
 
       <table {...getTableProps()} className="password-table">

@@ -15,6 +15,19 @@ export const GetPasswordList = createAsyncThunk(
   }
 );
 
+export const FetchSinglePassword = createAsyncThunk(
+  "PasswordList/fetchSinglePassword",
+  async ({ id, fillPassword }, { rejectWithValue }) => {
+    try {
+      let list = await authFetch.get(`/passwords/${id}/`);
+      fillPassword(list.data);
+      return list.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.Error);
+    }
+  }
+);
+
 export const AddPasswordList = createAsyncThunk(
   "PasswordList/AddPasswordList",
   async (data, { rejectWithValue }) => {
@@ -24,43 +37,42 @@ export const AddPasswordList = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
-      toggle();
       toast.success(newData.data.Success, { autoClose: 3000 });
-      return newData.data.data;
+      return newData.data;
     } catch (error) {
       return rejectWithValue(error.response.data.Error);
     }
   }
 );
 
-export const UpdateCityMaster = createAsyncThunk(
-  "CityMaster/UpdateCityMaster",
-  async ({ data, toggle }, { rejectWithValue }) => {
+export const UpdatePasswordList = createAsyncThunk(
+  "PasswordList/UpdatePasswordList",
+  async ({ id, data }, { rejectWithValue }) => {
     try {
-      let newData = await authFetch.put(`/utilities/city/`, data, {
+      let newData = await authFetch.put(`/passwords/${id}/`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      toggle();
       toast.success(newData.data.Success, { autoClose: 3000 });
-      return newData.data.data;
+      return newData.data;
     } catch (error) {
       return rejectWithValue(error.response.data.Error);
     }
   }
 );
 
-export const deleteCityMaster = createAsyncThunk(
-  "CityMaster/deleteCityMaster",
-  async (data, { rejectWithValue }) => {
+export const DeletePassword = createAsyncThunk(
+  "PasswordList/DeletePassword",
+  async (id, { rejectWithValue }) => {
+    console.log("id", id);
     try {
-      let newData = await authFetch.delete(`/utilities/city/`, {
-        data,
-      });
+      let newData = await authFetch.delete(`/passwords/${id}/`);
+      console.log("Deleted :", newData);
       toast.success(newData.data.Success, { autoClose: 3000 });
       return { id: newData.data.id, warning: newData.data.Success };
     } catch (error) {
+      alert(error);
       return rejectWithValue(error.response.data.Error);
     }
   }
@@ -75,6 +87,7 @@ function matchActionType(action, name, type) {
 let initialState = {
   loading: false,
   data: [],
+  single_data: null,
   country_states: [],
   error: null,
   warningMsg: "",
@@ -90,21 +103,23 @@ export const PasswordList = createSlice({
         state.data = action.payload;
       })
       .addCase(AddPasswordList.fulfilled, (state, action) => {
-        // console.log(action.payload)
+        console.log(action.payload);
         state.data.push(action.payload);
       })
-      .addCase(UpdateCityMaster.fulfilled, (state, action) => {
+      .addCase(FetchSinglePassword.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.single_data = action.payload;
+      })
+      .addCase(UpdatePasswordList.fulfilled, (state, action) => {
         let { payload } = action;
         state.data = state.data.map((oldCity) =>
-          oldCity.city_id !== payload.city_id ? oldCity : payload
+          oldCity.id !== payload.id ? oldCity : payload
         );
       })
-      .addCase(deleteCityMaster.fulfilled, (state, action) => {
+      .addCase(DeletePassword.fulfilled, (state, action) => {
         let { payload } = action;
-        if (!payload.delete_confirmation) {
-          state.warningMsg = payload.warning;
-        }
-        state.data = state.data.filter((City) => City.city_id !== payload.id);
+
+        state.data = state.data.filter((City) => City.id !== payload.id);
       });
 
     // ERROR

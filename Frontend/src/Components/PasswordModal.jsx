@@ -1,24 +1,44 @@
 // PasswordModal.js
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 import "../styles/PasswordModal.css"; // Create and style this CSS file as needed
+import { useDispatch } from "react-redux";
+import { AddPasswordList } from "../store/PasswordList/passwordListReducer";
 
 Modal.setAppElement("#root"); // Make sure this matches your root element id
 
-const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
+const PasswordModal = ({ isOpen, onRequestClose, onSubmit, currentRecord }) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     reset,
   } = useForm();
 
+  const dispatch = useDispatch();
+
   const handleFormSubmit = (data) => {
+    if (currentRecord) {
+      data.id = currentRecord.id;
+    }
     onSubmit(data);
-    reset(); // Reset form after submission
-    onRequestClose(); // Close the modal
+    reset();
+    onRequestClose();
   };
+
+
+  useEffect(() => {
+    if (currentRecord) {
+      setValue("website_name", currentRecord.website_name);
+      setValue("website_url", currentRecord.website_url);
+      setValue("username", currentRecord.username);
+      setValue("password", currentRecord.password);
+    } else {
+      reset();
+    }
+  }, [currentRecord, setValue, reset]);
 
   return (
     <Modal
@@ -28,7 +48,7 @@ const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
       className="modal"
       overlayClassName="overlay"
     >
-      <h2>Add New Password</h2>
+      <h2>{`${currentRecord ? "Update" : "Add"}`} New Password</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="form-group">
           <label>Website Name</label>
@@ -79,7 +99,7 @@ const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
             Cancel
           </button>
           <button type="submit" className="submit-button">
-            Add
+            {`${currentRecord ? "Update" : "Add"}`}
           </button>
         </div>
       </form>
